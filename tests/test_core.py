@@ -8416,11 +8416,11 @@ NODEFS is no longer included by default; build with -lnodefs.js
 
   def test_safe_stack(self):
     self.set_setting('STACK_OVERFLOW_CHECK', 2)
-    self.set_setting('TOTAL_STACK', 65536)
+    self.set_setting('TOTAL_STACK', 1024)
     if self.is_optimizing():
-      expected = ['Aborted(stack overflow)']
+      expected = ['Aborted(stack overflow (Attempt to set SP to 0x310, with stack limits [0x410 - 0x810])']
     else:
-      expected = ['Aborted(stack overflow)', '__handle_stack_overflow']
+      expected = ['Aborted(stack overflow (Attempt to set SP to 0x390, with stack limits [0x410 - 0x810])', '__handle_stack_overflow']
     self.do_runf(test_file('core/test_safe_stack.c'),
                  expected_output=expected,
                  assert_returncode=NON_ZERO, assert_all=True)
@@ -8432,9 +8432,9 @@ NODEFS is no longer included by default; build with -lnodefs.js
     self.set_setting('PROXY_TO_PTHREAD')
     self.set_setting('USE_PTHREADS')
     if self.is_optimizing():
-      expected = ['Aborted(stack overflow)']
+      expected = ['Aborted(stack overflow']
     else:
-      expected = ['Aborted(stack overflow)', '__handle_stack_overflow']
+      expected = ['Aborted(stack overflow', '__handle_stack_overflow']
     self.do_runf(test_file('core/test_safe_stack.c'),
                  expected_output=expected,
                  assert_returncode=NON_ZERO, assert_all=True)
@@ -8443,9 +8443,9 @@ NODEFS is no longer included by default; build with -lnodefs.js
     self.set_setting('STACK_OVERFLOW_CHECK', 2)
     self.set_setting('TOTAL_STACK', 65536)
     if self.is_optimizing():
-      expected = ['Aborted(stack overflow)']
+      expected = ['Aborted(stack overflow']
     else:
-      expected = ['Aborted(stack overflow)', '__handle_stack_overflow']
+      expected = ['Aborted(stack overflow', '__handle_stack_overflow']
     self.do_runf(test_file('core/test_safe_stack_alloca.c'),
                  expected_output=expected,
                  assert_returncode=NON_ZERO, assert_all=True)
@@ -8476,7 +8476,7 @@ NODEFS is no longer included by default; build with -lnodefs.js
       void sidey() {
         f(NULL);
       }
-    ''', ['Aborted(stack overflow)', '__handle_stack_overflow'], assert_returncode=NON_ZERO, force_c=True)
+    ''', ['Aborted(stack overflow', '__handle_stack_overflow'], assert_returncode=NON_ZERO, force_c=True)
 
   def test_fpic_static(self):
     self.emcc_args.append('-fPIC')
