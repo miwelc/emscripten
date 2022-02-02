@@ -2560,6 +2560,12 @@ The current type of b is: 9
     self.add_pre_run("Module.onAbort = function() { console.log('onAbort called'); }")
     self.do_run_in_out_file_test('pthread/test_pthread_abort.c', assert_returncode=NON_ZERO)
 
+  @node_pthreads
+  def test_pthread_abort_interrupt(self):
+    self.set_setting('EXIT_RUNTIME')
+    self.set_setting('PTHREAD_POOL_SIZE', 1)
+    self.do_run_in_out_file_test('pthread/test_pthread_abort_interrupt.c', assert_returncode=NON_ZERO)
+
   @no_asan('ASan does not support custom memory allocators')
   @no_lsan('LSan does not support custom memory allocators')
   @node_pthreads
